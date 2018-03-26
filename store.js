@@ -5,13 +5,18 @@ const knex = require('knex')(require('./knexfile'))
 module.exports = {
   // methods to call from app.js
   createUser ({ username, password }) {
+    
     console.log(`Add user ${username}`)
-    const { salt, hash } = saltHashPassword({ password })
-    return knex('user').insert({
-      salt,
-      encrypted_password: hash,
-      username
-    })
+    return knex('user').where({ username })
+        .then(([user]) => {
+            if (user) return { success: false }
+            const { salt, hash } = saltHashPassword({ password })
+            return knex('user').insert({
+              salt,
+              encrypted_password: hash,
+              username
+            })
+        })  
   },
   authenticate ({ username, password }) {
     console.log(`Authenticating user ${username}`)

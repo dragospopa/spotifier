@@ -12,8 +12,8 @@ Login.addEventListener('submit', (e) => {
   const password = Login.querySelector('.password').value
   post('/api/login', { username, password })
     .then(({ status }) => {
-      if (status === 200) alert('login success')
-      else alert('login failed')
+      if (status === 200) window.location.replace("/dashboard.html");
+      else alert('login failed');
     })
 })
 function post (path, data) {
